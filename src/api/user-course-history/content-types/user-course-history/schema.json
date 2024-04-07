@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_course_histories",
+  "info": {
+    "singularName": "user-course-history",
+    "pluralName": "user-course-histories",
+    "displayName": "User course history"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "course_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course.course"
+    },
+    "lesson_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lesson.lesson"
+    }
+  }
+}

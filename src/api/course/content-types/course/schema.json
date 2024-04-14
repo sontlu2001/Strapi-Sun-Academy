@@ -23,6 +23,23 @@
     },
     "current_Price": {
       "type": "integer"
+    },
+    "imageObj": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "slug": {
+      "type": "string"
+    },
+    "is_free": {
+      "type": "boolean"
     }
   }
 }

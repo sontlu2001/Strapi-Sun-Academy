@@ -4,22 +4,27 @@
   "info": {
     "singularName": "course-category",
     "pluralName": "course-categories",
-    "displayName": "Course Category"
+    "displayName": "Course Category",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "course": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::course.course"
+    "title": {
+      "type": "string"
     },
-    "category_id": {
+    "url_params": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "courses": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::category.category"
+      "relation": "oneToMany",
+      "target": "api::course.course"
     }
   }
 }

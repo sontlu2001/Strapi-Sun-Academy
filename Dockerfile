@@ -14,7 +14,7 @@ RUN npm install -f
 COPY . .
 
 # Expose cổng mà ứng dụng chạy trên
-#EXPOSE 1337
+EXPOSE 1337
 
 # Command to run build application
 CMD ["npm","run", "develop"]

@@ -24,7 +24,7 @@
     "current_Price": {
       "type": "integer"
     },
-    "imageObj": {
+    "image": {
       "type": "media",
       "multiple": true,
       "required": false,

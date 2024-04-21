@@ -9,8 +9,10 @@ services:
       - DATABASE_USERNAME=postgres
     ports:
       - 5432:5432
+    expose:
+      - 5432
     volumes:
-      - ../pgdata:/var/lib/postgresql/data
+      - ../../pgdata:/var/lib/postgresql/data
     networks:
       - strapi_network
 
@@ -18,16 +20,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
     environment:
       - DATABASE_HOST=db
     ports:
       - 1337:1337
+    expose:
+      - 1337
     networks:
       - strapi_network
 
+  # nginx:
+  #   image: nginx:1.23.3
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./website/dist:/usr/share/nginx/html
+  #     - ./default.conf:/etc/nginx/conf.d/default.conf
+  #     - ./log/nginx:/var/log/nginx/
 networks:
   strapi_network:
     driver: bridge
-
-
 #sudo docker compose -p sun-academy up -d

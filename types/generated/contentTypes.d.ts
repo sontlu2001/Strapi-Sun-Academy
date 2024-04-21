@@ -915,7 +915,7 @@ export interface ApiCourseCourse extends Schema.CollectionType {
     description: Attribute.Text;
     original_Price: Attribute.Integer;
     current_Price: Attribute.Integer;
-    imageObj: Attribute.Media;
+    image: Attribute.Media;
     slug: Attribute.String;
     is_free: Attribute.Boolean;
     createdAt: Attribute.DateTime;
@@ -941,20 +941,19 @@ export interface ApiCourseCategoryCourseCategory extends Schema.CollectionType {
     singularName: 'course-category';
     pluralName: 'course-categories';
     displayName: 'Course Category';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    course: Attribute.Relation<
+    title: Attribute.String;
+    url_params: Attribute.String;
+    slug: Attribute.String;
+    courses: Attribute.Relation<
       'api::course-category.course-category',
-      'oneToOne',
+      'oneToMany',
       'api::course.course'
-    >;
-    category_id: Attribute.Relation<
-      'api::course-category.course-category',
-      'oneToOne',
-      'api::category.category'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

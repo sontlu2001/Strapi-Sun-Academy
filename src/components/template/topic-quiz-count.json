@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_template_topic_quiz_counts",
+  "info": {
+    "displayName": "TopicQuizCount"
+  },
+  "options": {},
+  "attributes": {
+    "topic": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::topic.topic"
+    },
+    "number": {
+      "type": "integer"
+    }
+  }
+}

@@ -973,6 +973,72 @@ export interface ApiCourseCategoryCourseCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiExamExam extends Schema.CollectionType {
+  collectionName: 'exams';
+  info: {
+    singularName: 'exam';
+    pluralName: 'exams';
+    displayName: 'Exam';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    description: Attribute.String;
+    start_date: Attribute.DateTime;
+    duration: Attribute.Time;
+    list_topic: Attribute.Component<'template.topic-quiz-count', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiExamQuestionExamQuestion extends Schema.CollectionType {
+  collectionName: 'exam_questions';
+  info: {
+    singularName: 'exam-question';
+    pluralName: 'exam-questions';
+    displayName: 'Exam Question';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    exam: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'api::exam.exam'
+    >;
+    question: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'api::question.question'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiLessonLesson extends Schema.CollectionType {
   collectionName: 'lessons';
   info: {
@@ -1089,6 +1155,79 @@ export interface ApiPaymentPayment extends Schema.CollectionType {
   };
 }
 
+export interface ApiQuestionQuestion extends Schema.CollectionType {
+  collectionName: 'questions';
+  info: {
+    singularName: 'question';
+    pluralName: 'questions';
+    displayName: 'Question';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    difficulty: Attribute.Enumeration<['Easy', 'Medium']>;
+    topic: Attribute.Relation<
+      'api::question.question',
+      'oneToOne',
+      'api::topic.topic'
+    >;
+    option_a: Attribute.String;
+    option_b: Attribute.String;
+    option_c: Attribute.String;
+    option_d: Attribute.String;
+    correct_answer: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::question.question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::question.question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTopicTopic extends Schema.CollectionType {
+  collectionName: 'topics';
+  info: {
+    singularName: 'topic';
+    pluralName: 'topics';
+    displayName: 'Topic';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    description: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::topic.topic',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::topic.topic',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiUserCourseHistoryUserCourseHistory
   extends Schema.CollectionType {
   collectionName: 'user_course_histories';
@@ -1157,9 +1296,13 @@ declare module '@strapi/types' {
       'api::comment.comment': ApiCommentComment;
       'api::course.course': ApiCourseCourse;
       'api::course-category.course-category': ApiCourseCategoryCourseCategory;
+      'api::exam.exam': ApiExamExam;
+      'api::exam-question.exam-question': ApiExamQuestionExamQuestion;
       'api::lesson.lesson': ApiLessonLesson;
       'api::note.note': ApiNoteNote;
       'api::payment.payment': ApiPaymentPayment;
+      'api::question.question': ApiQuestionQuestion;
+      'api::topic.topic': ApiTopicTopic;
       'api::user-course-history.user-course-history': ApiUserCourseHistoryUserCourseHistory;
     }
   }

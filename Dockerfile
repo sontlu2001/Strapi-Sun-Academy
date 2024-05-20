@@ -1,5 +1,5 @@
 # Use an official Node.js 18 image as the base
-FROM node:18
+FROM node:18alpine
 
 # Set the working directory in the container
 WORKDIR /app
@@ -13,7 +13,7 @@ RUN npm install -f
 # Copy the rest of the application code
 COPY . .
 
-# Expose cổng mà ứng dụng chạy trên
+# Expose the port the app runs on
 EXPOSE 1337
 
 # Command to run build application

@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "questions",
+  "info": {
+    "singularName": "question",
+    "pluralName": "questions",
+    "displayName": "Question",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "enumeration",
+      "enum": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ]
+    },
+    "topic": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::topic.topic"
+    },
+    "option_a": {
+      "type": "string"
+    },
+    "option_b": {
+      "type": "string"
+    },
+    "option_c": {
+      "type": "string"
+    },
+    "option_d": {
+      "type": "string"
+    },
+    "correct_answer": {
+      "type": "string"
+    },
+    "explanation": {
+      "type": "text",
+      "multiple": false
+    },
+    "media": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}

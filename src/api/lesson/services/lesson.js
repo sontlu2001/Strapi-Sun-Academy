@@ -16,6 +16,7 @@ module.exports = createCoreService("api::lesson.lesson", ({ strapi }) => ({
     });
     const chapters = await strapi.db.query('api::chapter.chapter').findMany({
       where:  {course_id: courseId},
+      orderBy: { id: 'ASC' },
     })
     return {
       chapters,

@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_template_topic_quiz_counts",
+  "info": {
+    "displayName": "TopicQuizCount",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "topic": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::topic.topic"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "difficulty": {
+      "type": "enumeration",
+      "enum": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ]
+    }
+  }
+}

@@ -25,6 +25,14 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::chapter.chapter"
+    },
+    "course_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course.course"
+    },
+    "order": {
+      "type": "biginteger"
     }
   }
 }

@@ -7,4 +7,12 @@ module.exports = ({ env }) => ({
   webhooks: {
     populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
   },
+  admin: {
+    auth: {
+      secret: env('ADMIN_JWT_SECRET', 'some_secret_value'),
+      options: {
+        expiresIn: '1m' // 1 minute
+      }
+    },
+  },
 });

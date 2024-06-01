@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exams",
+  "info": {
+    "singularName": "exam",
+    "pluralName": "exams",
+    "displayName": "Exam",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "datetime"
+    },
+    "duration": {
+      "type": "time"
+    },
+    "list_topic": {
+      "type": "component",
+      "repeatable": true,
+      "component": "template.topic-quiz-count"
+    }
+  }
+}

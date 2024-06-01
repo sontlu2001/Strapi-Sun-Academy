@@ -972,6 +972,72 @@ export interface ApiCourseCategoryCourseCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiExamExam extends Schema.CollectionType {
+  collectionName: 'exams';
+  info: {
+    singularName: 'exam';
+    pluralName: 'exams';
+    displayName: 'Exam';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    description: Attribute.String;
+    start_date: Attribute.DateTime;
+    duration: Attribute.Time;
+    list_topic: Attribute.Component<'template.topic-quiz-count', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiExamQuestionExamQuestion extends Schema.CollectionType {
+  collectionName: 'exam_questions';
+  info: {
+    singularName: 'exam-question';
+    pluralName: 'exam-questions';
+    displayName: 'Exam Question';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    exam: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'api::exam.exam'
+    >;
+    question: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'api::question.question'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::exam-question.exam-question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiLessonLesson extends Schema.CollectionType {
   collectionName: 'lessons';
   info: {
@@ -1346,6 +1412,8 @@ declare module '@strapi/types' {
       'api::comment.comment': ApiCommentComment;
       'api::course.course': ApiCourseCourse;
       'api::course-category.course-category': ApiCourseCategoryCourseCategory;
+      'api::exam.exam': ApiExamExam;
+      'api::exam-question.exam-question': ApiExamQuestionExamQuestion;
       'api::lesson.lesson': ApiLessonLesson;
       'api::note.note': ApiNoteNote;
       'api::payment.payment': ApiPaymentPayment;

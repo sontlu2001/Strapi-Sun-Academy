@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quiz_result_details",
+  "info": {
+    "singularName": "quiz-result-detail",
+    "pluralName": "quiz-result-details",
+    "displayName": "Quiz Result Detail",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "question": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::question.question"
+    },
+    "answer": {
+      "type": "string"
+    },
+    "quiz_result": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::quiz-result.quiz-result"
+    }
+  }
+}

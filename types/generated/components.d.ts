@@ -4,6 +4,7 @@ export interface TemplateTopicQuizCount extends Schema.Component {
   collectionName: 'components_template_topic_quiz_counts';
   info: {
     displayName: 'TopicQuizCount';
+    description: '';
   };
   attributes: {
     topic: Attribute.Relation<
@@ -12,6 +13,7 @@ export interface TemplateTopicQuizCount extends Schema.Component {
       'api::topic.topic'
     >;
     number: Attribute.Integer;
+    difficulty: Attribute.Enumeration<['Easy', 'Medium', 'Hard']>;
   };
 }
 

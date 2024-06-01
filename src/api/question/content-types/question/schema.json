@@ -19,7 +19,8 @@
       "type": "enumeration",
       "enum": [
         "Easy",
-        "Medium"
+        "Medium",
+        "Hard"
       ]
     },
     "topic": {
@@ -41,6 +42,10 @@
     },
     "correct_answer": {
       "type": "string"
+    },
+    "explanation": {
+      "type": "text",
+      "multiple": false
     }
   }
 }

@@ -742,7 +742,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -1168,7 +1167,7 @@ export interface ApiQuestionQuestion extends Schema.CollectionType {
   };
   attributes: {
     title: Attribute.String;
-    difficulty: Attribute.Enumeration<['Easy', 'Medium']>;
+    difficulty: Attribute.Enumeration<['Easy', 'Medium', 'Hard']>;
     topic: Attribute.Relation<
       'api::question.question',
       'oneToOne',
@@ -1179,6 +1178,8 @@ export interface ApiQuestionQuestion extends Schema.CollectionType {
     option_c: Attribute.String;
     option_d: Attribute.String;
     correct_answer: Attribute.String;
+    explanation: Attribute.Text;
+    media: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1190,6 +1191,121 @@ export interface ApiQuestionQuestion extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::question.question',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiQuizQuiz extends Schema.CollectionType {
+  collectionName: 'quizzes';
+  info: {
+    singularName: 'quiz';
+    pluralName: 'quizzes';
+    displayName: 'Quiz';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    description: Attribute.String;
+    start_date: Attribute.DateTime;
+    duration: Attribute.Time;
+    list_topic: Attribute.Component<'template.topic-quiz-count', true>;
+    users_permissions_users: Attribute.Relation<
+      'api::quiz.quiz',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::quiz.quiz', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::quiz.quiz', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiQuizResultQuizResult extends Schema.CollectionType {
+  collectionName: 'quiz_results';
+  info: {
+    singularName: 'quiz-result';
+    pluralName: 'quiz-results';
+    displayName: 'Quiz Result';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    quiz: Attribute.Relation<
+      'api::quiz-result.quiz-result',
+      'oneToOne',
+      'api::quiz.quiz'
+    >;
+    total_question: Attribute.Integer;
+    correct_answers: Attribute.Integer;
+    status: Attribute.Enumeration<['in progress', 'completed']>;
+    users_permissions_user: Attribute.Relation<
+      'api::quiz-result.quiz-result',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::quiz-result.quiz-result',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::quiz-result.quiz-result',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiQuizResultDetailQuizResultDetail
+  extends Schema.CollectionType {
+  collectionName: 'quiz_result_details';
+  info: {
+    singularName: 'quiz-result-detail';
+    pluralName: 'quiz-result-details';
+    displayName: 'Quiz Result Detail';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    question: Attribute.Relation<
+      'api::quiz-result-detail.quiz-result-detail',
+      'oneToOne',
+      'api::question.question'
+    >;
+    answer: Attribute.String;
+    quiz_result: Attribute.Relation<
+      'api::quiz-result-detail.quiz-result-detail',
+      'oneToOne',
+      'api::quiz-result.quiz-result'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::quiz-result-detail.quiz-result-detail',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::quiz-result-detail.quiz-result-detail',
       'oneToOne',
       'admin::user'
     > &
@@ -1302,6 +1418,9 @@ declare module '@strapi/types' {
       'api::note.note': ApiNoteNote;
       'api::payment.payment': ApiPaymentPayment;
       'api::question.question': ApiQuestionQuestion;
+      'api::quiz.quiz': ApiQuizQuiz;
+      'api::quiz-result.quiz-result': ApiQuizResultQuizResult;
+      'api::quiz-result-detail.quiz-result-detail': ApiQuizResultDetailQuizResultDetail;
       'api::topic.topic': ApiTopicTopic;
       'api::user-course-history.user-course-history': ApiUserCourseHistoryUserCourseHistory;
     }

@@ -30,6 +30,7 @@ jobs:
       working-directory: /opt/project
       run: |
         STRAPI_IMAGE_TAG=${{ env.STRAPI_IMAGE_TAG }} docker compose up -d strapi
+        docker image ls | grep strapi
 
     # Notify failure
     - name: Notify failure

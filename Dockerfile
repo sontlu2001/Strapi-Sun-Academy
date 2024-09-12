@@ -1,5 +1,5 @@
 # Use an official Node.js 18 image as the base
-FROM node:18alpine
+FROM node:18.20.4-alpine3.20
 
 # Set the working directory in the container
 WORKDIR /app
@@ -18,4 +18,3 @@ EXPOSE 1337
 
 # Command to run build application
 CMD ["npm","run", "develop"]
-

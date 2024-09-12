@@ -1,0 +1,29 @@
+name: Recovery Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Enter the image tag for manual recovery (e.g., strapi:20230911_123456)'
+        required: true
+        default: ''
+
+jobs:
+  recover:
+    runs-on: self-hosted
+    steps:
+    - name: Replace image with manually entered tag
+      run: |
+        image_tag="${{ github.event.inputs.image_tag }}"
+        if [ -n "$image_tag" ]; then
+          sed -i "s|image: strapi:.*|image: $image_tag|" /opt/project/docker-compose.yml
+          echo "Image tag updated to $image_tag in docker-compose.yml"
+        else
+          echo "No image tag provided, skipping image update."
+        fi
+
+    - name: Restart Docker Compose
+      working-directory: /opt/project
+      run: |
+        docker compose down strapi
+        docker compose up -d strapi

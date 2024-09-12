@@ -1,0 +1,38 @@
+name: Deploy Strapi-Sun-Academy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Sync code to /opt/project/Strapi-Sun-Academy
+      run: |
+        rsync -av --delete --exclude='.env' ./ /opt/project/Strapi-Sun-Academy/
+
+    # Build Docker Image with timestamp tag for Strapi-Sun-Academy
+    - name: Build Docker Image
+      run: |
+        cd /opt/project/Strapi-Sun-Academy
+        timestamp=$(date +%Y%m%d_%H%M%S)
+        docker build -t strapi:$timestamp .
+        echo "Image built with tag: strapi:$timestamp"
+        echo "STRAPI_IMAGE_TAG=$timestamp" >> $GITHUB_ENV
+
+    # Replace image in Docker Compose and deploy
+    - name: Deploy Docker Compose
+      working-directory: /opt/project
+      run: |
+        STRAPI_IMAGE_TAG=${{ env.STRAPI_IMAGE_TAG }} docker compose up -d strapi
+
+    # Notify failure
+    - name: Notify failure
+      if: failure()
+      run: |
+        echo "Deployment failed. You can trigger manual recovery from GitHub UI."

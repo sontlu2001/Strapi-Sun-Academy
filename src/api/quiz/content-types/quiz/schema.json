@@ -33,10 +33,11 @@
       "component": "template.topic-quiz-count",
       "required": true
     },
-    "users_permissions_users": {
+    "users_permissions_user": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user"
+      "inversedBy": "quizzes"
     },
     "image": {
       "type": "media",

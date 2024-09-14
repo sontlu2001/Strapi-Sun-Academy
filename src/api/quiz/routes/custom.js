@@ -9,6 +9,8 @@ module.exports = {
         method: "GET",
         path: "/quiz/getQuizByUser",
         handler: "quiz.getQuizByUser",
+        config: {
+          policies: ["global::isAuthenticated"],
       },
     ],
    };

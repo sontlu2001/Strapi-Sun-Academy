@@ -75,26 +75,19 @@ module.exports = createCoreController("api::quiz.quiz", ({ strapi }) => ({
 
   getQuizByUser: async (ctx) => {
     const { user } = ctx.state;
-  
-    // Kiểm tra xem người dùng đã đăng nhập chưa
-    if (!user) {
-      return ctx.unauthorized('Bạn cần đăng nhập để truy cập tài nguyên này.');
-    }
-  
-    const quizResults = await strapi.entityService.findMany('api::quiz.quiz', {
-      filters: {
-        users_permissions_user: user.id,
-      },
+    const quizResults = await strapi.db.query("api::quiz.quiz").findMany({
+      select: ["id", "name", "description", "start_date", "duration"],
+      where: { users_permissions_users: { id: user.id } },
       populate: {
-        image: {
-          fields: ['url'],
-        },
-      },
-      fields: ['id', 'name', 'description', 'start_date', 'duration'],
+       image: {
+         select: ["url"]
+       }
+      }
     });
-  
+
     return ctx.send({
-      message: 'Lấy danh sách quiz thành công',
+      message: "Successfully fetched quiz results by user",
       data: quizResults,
     });
   },
+}));

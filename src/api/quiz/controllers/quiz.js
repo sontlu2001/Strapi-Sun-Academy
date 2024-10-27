@@ -23,7 +23,7 @@ module.exports = createCoreController("api::quiz.quiz", ({ strapi }) => ({
       list_topic.map(async (item) => {
         const result = await strapi.db.connection.raw(
           `SELECT cttqctl.topic_id
-      FROM components_template_topic_quiz_counts_topic_links cttqctl  
+      FROM components_template_topic_quiz_counts_topic_links cttqctl
       WHERE cttqctl.topic_quiz_count_id = ${item.id}`
         );
         return {
@@ -36,19 +36,56 @@ module.exports = createCoreController("api::quiz.quiz", ({ strapi }) => ({
 
     // Fetching questions for each topic
     const fetchQuestions = async (item) => {
-      const { rows: questions } = await strapi.db.connection.raw(
-        `SELECT q.id, q.title, q.option_a, q.option_b, q.option_c, q.option_d 
-      FROM questions q, questions_topic_links qtl  
-      WHERE q.id = qtl.question_id AND qtl.topic_id = ${item.id} 
-        AND q.difficulty = INITCAP('${item.difficulty}') 
-      ORDER BY RANDOM()
-      LIMIT ${item.number}`
-      );
-      return questions;
+      if(item.number){
+        // const { rows: questions } = await strapi.db.connection.raw(
+        // `SELECT q.id, q.title, q.option_a, q.option_b, q.option_c, q.option_d
+        // FROM questions q, questions_topic_links qtl
+        // WHERE q.id = qtl.question_id AND qtl.topic_id = ${item.id}
+        //   AND q.difficulty = INITCAP('${item.difficulty}')
+        // ORDER BY RANDOM()
+        // LIMIT ${item.number}`
+        // );
+
+        const questions = await strapi.db.query('api::question.question').findMany({
+          where: {
+            topic: item.id,
+            difficulty: item.difficulty
+          },
+          select: ['id', 'title', 'option_a', 'option_b', 'option_c', 'option_d'],
+          populate: {
+            image: {
+              select: ["url"]
+            }
+          },
+          limit: item.number,
+        });
+
+        const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+        return shuffledQuestions;
+      }
+      else {
+        const questions = await strapi.db.query('api::question.question').findMany({
+          where: {
+            topic: {
+              id: item.id,
+            },
+          },
+          select: ['id', 'title', 'option_a', 'option_b', 'option_c', 'option_d'],
+          populate: {
+            image: {
+              select: ["url"]
+            }
+          },
+        });
+
+        const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+        return shuffledQuestions;
+      }
     };
 
     // Fetching questions for each topic
     const listQuestions = await Promise.all(list_topic_map.map(fetchQuestions));
+    // console.log(listQuestions, 'listQuestions');
 
     // create a quiz result
     const { user } = ctx.state;
@@ -78,11 +115,7 @@ module.exports = createCoreController("api::quiz.quiz", ({ strapi }) => ({
     const quizResults = await strapi.db.query("api::quiz.quiz").findMany({
       select: ["id", "name", "description", "start_date", "duration"],
       where: { users_permissions_users: { id: user.id } },
-      populate: {
-       image: {
-         select: ["url"]
-       }
-      }
+      populate: true
     });
 
     return ctx.send({

@@ -11,45 +11,57 @@ module.exports = createCoreController(
   ({ strapi }) => ({
     submit: async (ctx) => {
       const { quizId, answers, quizResultId } = ctx.request.body;
-      const { user } = ctx.state;
 
-      // update status a quiz result
+      // Validate the answers object
+      if (!answers || typeof answers !== 'object' || Object.keys(answers).length === 0) {
+        return ctx.badRequest('Invalid answers data');
+      }
+
+      // Update the quiz result status to 'completed'
       await strapi.db.query("api::quiz-result.quiz-result").update({
-        where: { id: quizId },
-        data: {
-          status: "completed",
-        },
+        where: { id: quizResultId },
+        data: { status: "completed" },
       });
 
-      // calculate correct answers
-      const questions = await Promise.all(
-        Object.keys(answers).map(async (question_id) => {
-          const { rows: question } = await strapi.db.connection.raw(
-            `SELECT q.id, q.title, q.option_a, q.option_b, q.option_c, q.option_d, q.correct_answer
-                FROM questions q
-                WHERE q.id = ${question_id} `
-          );
-           // create a entry quiz result detail
-           await strapi.db
-           .query("api::quiz-result-detail.quiz-result-detail")
-           .create({
-             data: {
-               question: question[0].id,
-               answer: answers[question_id],
-               quiz_result: quizResultId,
-             },
-           });
-          return {
-            ...question[0],
-            answer: answers[question_id],
-          };
+      let correctAnswers = 0;
+      // Fetch all questions for the quiz in one go
+      const questionIds = Object.keys(answers);
+      const questions = await strapi.db.query('api::question.question').findMany({
+        where: { id: { $in: questionIds } },
+        select: ['id', 'correct_answer'],
+      });
+
+      // Map through the questions and calculate correct answers, and create quiz result details
+      await Promise.all(
+        questions.map(async (question) => {
+          const userAnswer = answers[question.id];
+          const isCorrect = userAnswer === question.correct_answer;
+          if (isCorrect) correctAnswers += 1;
+          
+          // Create a quiz result detail entry
+          await strapi.db.query("api::quiz-result-detail.quiz-result-detail").create({
+            data: {
+              question: question.id,
+              answer: userAnswer,
+              quiz_result: quizResultId,
+            },
+          });
         })
       );
 
+      // Update the quiz result with the number of correct answers
+      const quizResult = await strapi.db.query("api::quiz-result.quiz-result").update({
+        where: { id: quizResultId },
+        data: { correct_answers: correctAnswers },
+        select: ['correct_answers', 'total_question'],
+      });
+
+      // Return response with correct and incorrect answers
       return ctx.send({
         message: "Quiz result submitted",
-        questions: questions,
+        correctAnswers: quizResult.correct_answers,
+        incorrectAnswers: quizResult.total_question - quizResult.correct_answers,
       });
-    },
+    }
   })
 );

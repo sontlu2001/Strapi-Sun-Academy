@@ -4,7 +4,6 @@ module.exports = {
         method: "POST",
         path: "/quiz/submit",
         handler: "quiz-result.submit",
-      },
+      }
     ],
    };
-   
